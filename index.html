@@ -1,0 +1,58 @@
+<html>
+  <body>
+    <script>!(function () {
+      let e = document.createElement("script"),
+        t = document.head || document.getElementsByTagName("head")[0];
+      (e.src =
+        "https://cdn.jsdelivr.net/npm/rasa-webchat/lib/index.js"),
+        // Replace 1.x.x with the version that you want
+        (e.async = !0),
+        (e.onload = () => {
+          window.WebChat.default(
+            {
+              customData: { language: "en" },
+              socketUrl: "http://localhost:5005",
+              // add other props here
+            },
+            null
+          );
+        }),
+        t.insertBefore(e, t.firstChild);
+    })();
+    </script>
+  <style>
+    body {
+        background-color: skyblue;
+        background-image: url(image/bgi.PNG);
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
+
+    .left {
+      margin-left: 10%;
+      margin-top: 10%;
+      padding: 30px;
+      width: 60%;
+      height: 50%;
+      color: #fff;
+    }
+    .left .company_info {
+      color: #fff;
+      font-size: 22px;
+      text-indent: 44px;
+    }
+    div h2 {
+        text-align: center;
+    }
+</style>
+  <div>
+      <div><img src="" alt=""></div>
+      <div class="left">
+        <h2>Welcome to CheckOut Ecommerce!</h2>
+        <p>
+          " CheckOut is an e-commerce company selling a very wide range of products. We handle orders from across the globe, and above a certain shopping value point, even offers free delivery. We have warehouses in all the major cities across the world, and even owns its own logistics company, with a huge fleet of cargo trucks, handful of cargo aircrafts and a couple of cargo ships. Our company have business across half of the continents. Welcome and join us! "
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

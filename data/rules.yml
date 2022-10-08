@@ -1,0 +1,72 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- rule: Activate form
+  steps:
+    - intent: order_enquiry
+    - action: utter_ask_order_details
+    - active_loop: utter_ask_order_details
+    - slot_was_set:
+      - order_number: order_number
+
+- rule: ask for email address
+  steps:
+    - intent: give_emailAddress
+    - slot_was_set:
+      - email_address: email_address
+    - action: action_AddCustomEmailAddress   #将用户输入的email存储于database
+    - action: utter_askAdditionalHelp
+
+
+- rule: order enquiry (sad path)
+  steps:
+    - intent: order_details  #输入订单号
+    - slot_was_set:
+      - order_number: order_number  #插入订单号
+    - action: action_ValidateOrderNumber
+    - action: utter_askAdditionalHelp
+
+
+#- rule: submit order number form
+#  condition:
+#    - active_loop: order_number_form
+#    steps:
+#      - action: order_number_form
+#      - active_loop: null
+#      - slot_was_set:
+#        - order_number: order_number  #插入订单号
+#        #  - action: order_number_form
+#        #  - active_loop: null
+#      - action: action_ValidateOrderNumber
+
+
+
+- rule: fallback
+  steps:
+    - intent: nlu_fallback
+    - action: utter_default
+
+
+- rule: deactivate form
+  condition:
+    - active_loop: utter_ask_order_details
+  steps:
+    - action: utter_ask_order_details
+    - active_loop: null
+#    - slot_was_set:
+#        -requested_slot: null
+    - slot_was_set:
+      - order_number: order_number
+    - action: utter_ask_order_details
+    - action: utter_askAdditionalHelp

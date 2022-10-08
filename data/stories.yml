@@ -1,0 +1,170 @@
+version: "3.1"
+
+stories:
+
+
+
+- story: order enquiry (sad path)  #查询订单
+#  condition：
+#  - activate_loop: order_number_form
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - action: utter_options  #初始greet后展示选项
+  - intent: order_enquiry
+  - action: utter_ask_order_details  #请求查询订单信息
+  - intent: order_details  #输入订单号
+  - slot_was_set:
+      - order_number: order_number  #插入订单号
+#  - action: order_number_form
+#  - active_loop: null
+  - action: action_ValidateOrderNumber
+  - action: utter_askAdditionalHelp
+
+
+
+- story: order deny (sad path)  #订单延迟-没延迟（有反馈）
+  steps:
+    - intent: order_deny
+    - action: utter_ask_order_details  #请求查询订单信息
+    - intent: order_details
+    - slot_was_set:
+        - order_number: order_number
+    - action: action_ValidateOrderNumber
+    - action: utter_askAdditionalHelp
+
+
+
+
+- story: order damaged or incorrect (happy path) #损坏或者错误的商品
+  steps:
+    - intent: damaged_incorrect_goods
+    - action: utter_ask_order_details  #请求查询订单信息
+    - intent: order_details
+    - slot_was_set:
+       - order_number: order_number
+    - action: action_ValidateOrderNumber
+#    - action: utter_AskForNature  #选择订单状态 damage or incorrect
+#    - checkpoint: checkpoint_goods_nature
+#    - or:
+#        - intent: choice_DamagedGoods
+#        - intent: choice_IncorrectGoods
+#    - action: utter_desired_actions
+    - action: utter_askAdditionalHelp
+
+
+
+- story: informal or unsupported questions   #其他不关于货物订单的问题
+  steps:
+    - intent: informal_questions
+    - action: utter_ask_customEmailAddress
+    - action: utter_alternatives_addressing   #选择替代的解决办法（email, phone call, ask for executive)
+    - checkpoint: checkpoint_informal_questions
+
+
+- story: ask for email address
+  steps:
+    - checkpoint: checkpoint_informal_questions
+    - intent: choice_EmailAddress
+    - action: utter_reply_choice_EmailAddress
+    - intent: give_emailAddress
+    - slot_was_set:
+      - email_address: email_address
+    - action:  action_AddCustomEmailAddress   #将用户输入的email存储于database
+    - action: utter_askAdditionalHelp
+
+- story: ask for executive   #寻求人工客服
+  steps:
+    - checkpoint: checkpoint_informal_questions
+    - intent: choice_CallForExecutive
+    - action: utter_reply_choice_CallForExecutive
+    - action: utter_askAdditionalHelp
+
+
+- story: no more help next to feedback   #在表示不需要帮助之后询问反馈
+  steps:
+    - intent: choice_noMoreHelp
+    - action: utter_replyHelp  #询问是否有使用反馈
+    - or:
+        - intent: choice_goodFeedback
+        - intent: choice_badFeedback
+    - action: utter_feedbackProvided
+    - action: utter_goodbye
+
+
+#- story: need additional help next to order enquiry
+#  steps:
+#    - intent: choice_additionalHelp
+#    - action: utter_options
+#    - intent: order_enquiry
+#    - action: utter_ask_order_details  #请求查询订单信息
+#    - intent: order_details  #输入订单号
+#    - slot_was_set:
+#      - order_number: order_number  #插入订单号
+#    - action: utter_askAdditionalHelp
+
+
+#- story: need additional help next to order deny
+#  steps:
+#    - intent: choice_additionalHelp
+#    - action: utter_options
+#    - intent: order_deny
+#    - action: utter_ask_order_details  #请求查询订单信息
+#    - intent: order_details
+#    - slot_was_set:
+#      - order_number: order_number
+#    - action: utter_askAdditionalHelp
+
+
+#- story: need additional help next to order damaged or incorrect
+#  steps:
+#    - intent: choice_additionalHelp
+#    - action: utter_options
+#    - intent: damaged_incorrect_goods
+#    - action: utter_ask_order_details  #请求查询订单信息
+#    - intent: order_details
+#    - slot_was_set:
+#      - order_number: order_number
+#    - action: utter_askAdditionalHelp
+
+
+- story: ask for phone call
+  steps:
+    - checkpoint: checkpoint_informal_questions
+    - intent: choice_PhoneNumber
+    - action: utter_reply_choice_PhoneNumber
+    - intent: give_phoneNumber
+    - slot_was_set:
+        - phone_number: phone_number
+    - action: action_AddPhoneNumber   #将用户输入的phone number存储于database
+    - action: utter_reply_action_AddPhoneNumber
+    - action: utter_askAdditionalHelp
+
+#- story: choose the nature of problems
+#  steps:
+#    - checkpoint: checkpoint_goods_nature
+#    - or:
+#        - intent: choice_DamagedGoods
+#        - intent: choice_IncorrectGoods
+#    - action: utter_desired_actions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,216 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - utter_options
+  - utter_ask_order_details
+  - order_enquiry
+  - order_deny
+  - order_details
+  - damaged_incorrect_goods
+  - informal_questions
+  - utter_ask_customEmailAddress
+  - utter_AskForNature
+  - utter_alternatives_addressing
+  - utter_reply_choice_EmailAddress
+  - utter_reply_choice_CallForExecutive
+  - utter_reply_action_AddPhoneNumber
+  - utter_reply_choice_PhoneNumber
+  - utter_askAdditionalHelp
+  - utter_feedbackProvided
+  - utter_askToProvideFeedback
+  - utter_desired_actions
+  - utter_replyHelp
+  - utter_default
+  - choice_EmailAddress
+  - choice_PhoneNumber
+  - choice_CallForExecutive
+  - choice_additionalHelp
+  - choice_noMoreHelp
+  - give_emailAddress
+  - give_phoneNumber
+  - choice_badFeedback
+  - choice_goodFeedback
+  - choice_DamagedGoods
+  - choice_IncorrectGoods
+  - nlu_fallback
+
+
+
+
+
+entities:
+  - order_number
+  - email_address
+  - phone_number
+  - language
+
+
+
+
+slots:
+  order_number:
+    type: text
+#    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: order_number
+
+
+  email_address:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: email_address
+
+  phone_number:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: phone_number
+
+
+
+responses:
+  utter_greet:
+  - text: "Welcome to the Online grocery! What Can I do for you?"
+
+  utter_cheer_up:
+  - text: "Here is something to cheer you up:"
+    image: "https://i.imgur.com/nGF1K8f.jpg"
+
+  utter_did_that_help:
+  - text: "Did that help you?"
+
+  utter_happy:
+  - text: "Great, carry on!"
+
+  utter_goodbye:
+  - text: "Bye"
+
+  utter_iamabot:
+  - text: "I am a bot, powered by Rasa."
+
+  utter_options:
+    - text: "There are some options you can choose."
+      buttons:
+        - title: "Order Enquiry"
+          payload: '/order_enquiry'
+        - title: "Delayed Order"
+          payload: '/order_deny'
+        - title: "Damaged or Incorrect Goods"
+          payload: '/damaged_incorrect_goods'
+        - title: "Some other informal or unsupported questions"
+          payload: '/informal_questions'
+
+
+
+  utter_ask_order_details:
+    - text: "Can you please give me your order number?"
+
+  utter_ask_customEmailAddress:
+    - text: "We know you still have some questions unsolved. Please leave a link anyway, so that we can contact you."
+  utter_reply_choice_EmailAddress:
+  - text: "Enter here:"
+
+  utter_reply_choice_CallForExecutive:
+  - text: "I'll put you through to human service."
+
+  utter_alternatives_addressing:
+    - text: "tell me how to contact you"
+      buttons:
+        - title: "Leave us an E-mail address"
+          payload: '/choice_EmailAddress'
+        - title: "Leave us your phone number"
+          payload: '/choice_PhoneNumber'
+        - title: "Call for an executive, please wait for a long time"
+          payload: '/choice_CallForExecutive'
+
+
+  utter_askAdditionalHelp:
+    - text: "Do you need more help?"
+      buttons:
+        - title: "I need more help"
+          payload: '/greet'
+        - title: "I don't need help anymore"
+          payload: '/choice_noMoreHelp'
+
+
+  utter_askToProvideFeedback:
+    - text: "what did you think of the dialogue with me in general? Please write you feedback."
+      buttons:
+        - title: "good"
+          payload: '/choice_goodFeedback'
+        - title: "bad"
+          payload: '/choice_badFeedback'
+
+
+  utter_ask_otherFeedback:
+  - text: "I am listening, give me your opinion."
+
+  utter_feedbackProvided:
+  - text: "Thanks for your feedback!!! We will improve ourselves in the future."
+
+  utter_replyHelp:
+  - text: "Could you please give me some feedback?"
+
+  choice_PhoneNumber:
+  - text: "Could you leave us your phone number so that we can contact with you soon~"
+
+  utter_reply_choice_PhoneNumber:
+  - text: "Enter here:"
+
+  utter_reply_action_AddPhoneNumber:
+  - text: "We will call you soon"
+
+  utter_desired_actions:  #需要修改成选项
+    - text: "uploading"
+
+  utter_default:
+    - text: "I'm so sorry for failing to get what you said, can you rephrase?"
+
+  utter_AskForNature:
+    - text: "Could you please tell us the nature of the goods you ordered?"
+      buttons:
+        - title: "Damaged goods"
+          payload: '/choice_DamagedGoods'
+        - title: "Incorrect goods"
+          payload: '/choice_IncorrectGoods'
+
+
+
+
+
+
+
+
+
+
+
+
+actions:
+  - action_AddCustomEmailAddress
+  - action_AddPhoneNumber
+  - action_ValidateOrderNumber
+
+
+forms:
+  order_number_form:
+    required_slots:
+      - order_number
+
+
+
+
+
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
